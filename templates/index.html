@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Summarizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="container">
+
+    <header>
+      <div class="logo"><span class="dot"></span> AI Powered</div>
+      <h1>Video<span>Sum</span></h1>
+      <p class="tagline">Playwright · Whisper · Groq · Python</p>
+    </header>
+
+    <div class="card" id="card-input">
+      <div class="card-label">Fonte</div>
+      <div class="input-row">
+        <input type="text" id="url-input" placeholder="https://youtube.com/watch?v=..." />
+        <button class="btn" onclick="startJob()">Resumir</button>
+      </div>
+      <div class="divider">ou</div>
+      <div class="file-zone" onclick="document.getElementById('file-input').click()">
+        <input type="file" id="file-input" accept="video/*,audio/*" onchange="fileChosen(this)" />
+        <p>Arraste um vídeo ou áudio, ou clique para selecionar</p>
+        <span class="file-name" id="file-name"></span>
+      </div>
+    </div>
+
+    <div class="card" id="card-options">
+      <div class="card-label">Configurações</div>
+      <div class="options-grid">
+        <div class="opt-group">
+          <label>Idioma da Transcrição</label>
+          <select id="lang">
+            <option value="pt">Português</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="auto">Auto-detect</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <label>Modelo Whisper</label>
+          <select id="model">
+            <option value="base">base — rápido</option>
+            <option value="small" selected>small — recomendado</option>
+            <option value="medium">medium — preciso</option>
+            <option value="large">large — melhor</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <label>Tom do Resumo</label>
+          <select id="tone">
+            <option value="profissional">Profissional</option>
+            <option value="casual">Casual</option>
+            <option value="bullet">Bullet Points</option>
+            <option value="academico">Acadêmico</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <label>Idioma do Resumo</label>
+          <select id="summary-lang">
+            <option value="pt">Português</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="card-progress" style="display:none">
+      <div class="card-label">Processando</div>
+      <div class="progress-wrap">
+        <div class="progress-fill" id="progress-bar"></div>
+      </div>
+      <span class="progress-label" id="progress-label">Iniciando...</span>
+      <ul class="steps">
+        <li id="step-meta"><span class="step-dot"></span> Extração de metadados (Playwright)</li>
+        <li id="step-audio"><span class="step-dot"></span> Download do áudio (yt-dlp)</li>
+        <li id="step-transcribe"><span class="step-dot"></span> Transcrição (Whisper)</li>
+        <li id="step-gpt"><span class="step-dot"></span> Geração do resumo (Groq)</li>
+      </ul>
+    </div>
+
+    <div class="card" id="card-error" style="display:none">
+      <div class="card-label">Erro</div>
+      <div class="error-box" id="error-msg"></div>
+      <button class="btn btn-ghost" onclick="reset()">Tentar novamente</button>
+    </div>
+
+    <div class="card" id="card-result" style="display:none">
+      <div class="result-header">
+        <div class="result-title" id="result-title"></div>
+        <div class="badges">
+          <span class="badge badge-cyan" id="badge-model"></span>
+          <span class="badge badge-green" id="badge-duration"></span>
+        </div>
+      </div>
+      <div class="summary-box" id="summary-text"></div>
+      <button class="transcript-toggle" onclick="toggleTranscript()">Ver transcrição completa</button>
+      <div id="transcript-box" style="display:none"></div>
+      <button class="btn btn-ghost" onclick="reset()">Novo vídeo</button>
+    </div>
+
+  </div>
+
+  <script src="/static/js/main.js"></script>
+</body>
+</html>
